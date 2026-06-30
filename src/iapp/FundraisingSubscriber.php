@@ -46,7 +46,7 @@ class FundraisingSubscriber extends \iLaravel\Core\iApp\Model
                 $rules = array_merge($rules, [
                     'bank_id' => "nullable|exists:banks,id",
                     'campaign_id' => "nullable|exists:fundraising_campaigns,id",
-                    'title' => "required|string",
+                    'title' => "nullable|string",
                     'duration' => "nullable|string",
                     'duration_value' => "nullable|string",
                     'duration_type' => "nullable|string",

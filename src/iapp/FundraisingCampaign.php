@@ -18,6 +18,8 @@ class FundraisingCampaign extends \iLaravel\Core\iApp\Model
     public static $s_end = 18446744073709551615;
     public $files = ['image'];
 
+    public $set_slug = true;
+
     public function creator()
     {
         return $this->belongsTo(imodal('User'), 'creator_id');

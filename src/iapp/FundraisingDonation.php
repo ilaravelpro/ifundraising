@@ -58,7 +58,7 @@ class FundraisingDonation extends \iLaravel\Core\iApp\Model
                     'campaign_id' => "nullable|exists:fundraising_campaigns,id",
                     'subscriber_id' => "nullable|exists:fundraising_subscribers,id",
                     'parent_id' => "nullable|exists:fundraising_donations,id",
-                    'title' => "required|string",
+                    'title' => "nullable|string",
                     'invoice_number' => "invoice_number|string",
                     'payment_total' => "nullable|numeric",
                     'currency' => "nullable|string|in:IRT",
