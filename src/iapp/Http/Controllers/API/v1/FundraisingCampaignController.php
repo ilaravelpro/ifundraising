@@ -49,7 +49,7 @@ class FundraisingCampaignController extends ApiController
 
     public function subscribe(Request $request, $record)
     {
-        if ($item = $this->model::findBySerial($record)) {
+        if ($item = $this->model::findByAny($record)) {
             if ($subscribe = $item->subscribers()->where("creator_id", auth()->id())->first()) {
                 $subscribe->update(['status' => "canceled", "canceled_at" => Carbon::now()]);
                 $this->statusMessage = _t("Your subscription was successfully canceled.");
@@ -102,7 +102,7 @@ class FundraisingCampaignController extends ApiController
 
     public function unsubscribe(Request $request, $record)
     {
-        if ($item = $this->model::findBySerial($record)) {
+        if ($item = $this->model::findByAny($record)) {
             if ($subscribe = $item->subscribers()->where("creator_id", auth()->id())->first()) {
                 $subscribe->update(['status' => "canceled", "canceled_at" => Carbon::now()]);
             }

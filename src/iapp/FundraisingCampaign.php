@@ -23,6 +23,8 @@ class FundraisingCampaign extends \iLaravel\Core\iApp\Model
     public $with_resource_data = ["user", "bank", "parent"];
     public $with_resource_smart = ["record"];
 
+    public static $find_names = ["slug"];
+
     public function creator()
     {
         return $this->belongsTo(imodal('User'), 'creator_id');
@@ -97,7 +99,7 @@ class FundraisingCampaign extends \iLaravel\Core\iApp\Model
                 ],$additionalRules);
                 break;
             case 'subscribe':
-                $arg1 = is_string($arg1) ? $this::findBySerial($arg1) : $arg1;
+                $arg1 = is_string($arg1) ? $this::findByAny($arg1) : $arg1;
                 if ($arg1->type == "bond") {
                     $rules = [
                         'bond_count' => "required|numeric|min:" . ($arg1->bond_min?:1),
