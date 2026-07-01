@@ -91,6 +91,7 @@ class FundraisingCampaignController extends ApiController
                             ]);
                         }
                         $subscribe->user_id = $user->id;
+                        $subscribe->save();
                     }
                 }
                 $this->statusMessage = _t("Your subscription was successful.");
