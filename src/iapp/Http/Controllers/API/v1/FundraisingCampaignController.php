@@ -53,8 +53,8 @@ class FundraisingCampaignController extends ApiController
             if ($subscribe = $item->subscribers()->where("creator_id", auth()->id())->first()) {
                 $subscribe->update(['status' => "canceled", "canceled_at" => Carbon::now()]);
                 $this->statusMessage = _t("Your subscription was successfully canceled.");
-            }else {
-                $item->subscribers()->updateOrCreate([
+            } else {
+                $subscribe = $item->subscribers()->updateOrCreate([
                     "creator_id" => auth()->id(),
                     "duration" => $item->duration,
                     "duration_value" => $item->duration_value,
@@ -62,8 +62,42 @@ class FundraisingCampaignController extends ApiController
                     "duration_volume" => $item->duration_volume,
                     "duration_amount" => $item->duration_amount,
                     "bond_amount" => $item->bond_amount,
-                    "bond_count" => $request->bound_count?:1,
+                    "bond_count" => $request->bound_count ?: 1,
                 ]);
+                $data_record = [
+                    "name" => @$request->name,
+                    "family" => @$request->family,
+                    "mobile" => @$request->mobile,
+                    "national_id" => @$request->national_id,
+                    "description" => @$request->description,
+                    "meta" => !empty($request->meta) && is_array($request->meta) ? @$request->meta : null,
+                ];
+                if (!empty($data_record = array_filter($data_record, fn($v) => !empty($v)))) {
+                    $subscribe->record()->updateOrCreate(["campaign_id" => $item->id], [
+                        "name" => $request->name,
+                        "family" => $request->family,
+                        "mobile" => $request->mobile,
+                        "national_id" => $request->national_id,
+                        "description" => $request->description,
+                        "meta" => $request->meta
+                    ]);
+                    if ($item->is_registering) {
+                        $userModel = imodal("User");
+                        if ($user = $userModel->where("national_id")->first()) {
+                            foreach (["name", "family", "mobile", "national_id"] as $index_name)
+                                if (!empty($data_record[$index_name]))$user->$index_name = $data_record[$index_name];
+                            $user->save();
+                        }else {
+                            $user = $userModel->updateOrCreate(["national_id" => $item->national_id], [
+                                "name" => @$data_record["name"],
+                                "family" => @$data_record["family"],
+                                "mobile" => @$data_record["mobile"],
+                                "national_id" => @$data_record["national_id"],
+                            ]);
+                        }
+                        $subscribe->user_id = $user->id;
+                    }
+                }
                 $this->statusMessage = _t("Your subscription was successful.");
             }
         }

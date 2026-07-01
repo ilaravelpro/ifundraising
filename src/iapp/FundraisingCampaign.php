@@ -20,6 +20,9 @@ class FundraisingCampaign extends \iLaravel\Core\iApp\Model
 
     public $set_slug = true;
 
+    public $with_resource_data = ["user", "bank", "parent"];
+    public $with_resource_smart = ["record"];
+
     public function creator()
     {
         return $this->belongsTo(imodal('User'), 'creator_id');
@@ -42,12 +45,21 @@ class FundraisingCampaign extends \iLaravel\Core\iApp\Model
 
     public function subscribers()
     {
-        return $this->hasMany(imodal('FundraisingSubscriber'), 'subscriber_id');
+        return $this->hasMany(imodal('FundraisingSubscriber'), 'campaign_id');
     }
 
     public function donations()
     {
-        return $this->hasMany(imodal('FundraisingDonation'), 'donation_id');
+        return $this->hasMany(imodal('FundraisingDonation'), 'campaign_id');
+    }
+
+    public function record()
+    {
+        return $this->belongsTo(imodal('FundraisingRecord'), 'record_id')->whereNull("subscriber_id");
+    }
+    public function records()
+    {
+        return $this->hasMany(imodal('FundraisingRecord'), 'record_id')->whereNotNull("subscriber_id");
     }
 
     public function rules(Request $request, $action, $arg1 = null)
@@ -91,6 +103,15 @@ class FundraisingCampaign extends \iLaravel\Core\iApp\Model
                         'bond_count' => "required|numeric|min:" . ($arg1->bond_min?:1),
                     ];
                 }
+                $rules = array_merge($rules, [
+                    'name' => "nullable|string",
+                    'family' => "nullable|string",
+                    'mobile' => "nullable|string",
+                    'national_id' => "nullable|string",
+                    'description' => "nullable|string",
+                    'meta.*' => "nullable|string",
+                    'birth_at' => "nullable|string",
+                ]);
                 break;
         }
         return $rules;

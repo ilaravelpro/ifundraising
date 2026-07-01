@@ -17,6 +17,13 @@ class FundraisingSubscriber extends \iLaravel\Core\iApp\Model
     public static $s_start = 1155;
     public static $s_end = 18446744073709551615;
 
+    public $with_resource_data = ["user", "campaign", "bank", "parent"];
+    public $with_resource_smart = ["record"];
+
+    public function user()
+    {
+        return $this->belongsTo(imodal('User'), 'user_id');
+    }
     public function creator()
     {
         return $this->belongsTo(imodal('User'), 'creator_id');
@@ -35,6 +42,15 @@ class FundraisingSubscriber extends \iLaravel\Core\iApp\Model
     public function campaign()
     {
         return $this->belongsTo(imodal('FundraisingCampaign'), 'campaign_id');
+    }
+
+    public function record()
+    {
+        return $this->belongsTo(imodal('FundraisingRecord'), 'record_id')->whereNull("donation_id");
+    }
+    public function records()
+    {
+        return $this->hasMany(imodal('FundraisingRecord'), 'record_id')->whereNotNull("donation_id");
     }
 
     public function rules(Request $request, $action, $parent = null)

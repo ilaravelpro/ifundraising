@@ -23,6 +23,7 @@ return new class extends Migration
         Schema::create('fundraising_subscribers', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->foreignId('creator_id')->nullable()->constrained('users');
+            $table->foreignId('user_id')->nullable()->constrained('users');
             $table->foreignId('campaign_id')->nullable()->constrained('fundraising_campaigns');
             $table->foreignId('bank_id')->nullable()->constrained('banks');
             $table->string('title')->nullable();

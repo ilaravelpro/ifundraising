@@ -13,7 +13,7 @@ return [
             'status' => true,
             'fundraising_campaigns' => ['status' => true],
             'fundraising_subscribers' => ['status' => true],
-            'fundraising_requests' => ['status' => true],
+            'fundraising_donations' => ['status' => true],
         ]
     ],
     'database' => [
