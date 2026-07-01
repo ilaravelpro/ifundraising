@@ -67,30 +67,25 @@ class FundraisingCampaignController extends ApiController
                 $data_record = [
                     "name" => @$request->name,
                     "family" => @$request->family,
+                    "gender" => @$request->gender,
                     "mobile" => @$request->mobile,
                     "national_id" => @$request->national_id,
                     "description" => @$request->description,
                     "meta" => !empty($request->meta) && is_array($request->meta) ? @$request->meta : null,
                 ];
                 if (!empty($data_record = array_filter($data_record, fn($v) => !empty($v)))) {
-                    $subscribe->record()->updateOrCreate(["campaign_id" => $item->id], [
-                        "name" => $request->name,
-                        "family" => $request->family,
-                        "mobile" => $request->mobile,
-                        "national_id" => $request->national_id,
-                        "description" => $request->description,
-                        "meta" => $request->meta
-                    ]);
+                    $subscribe->record()->updateOrCreate(["campaign_id" => $item->id], $data_record);
                     if ($item->is_registering) {
                         $userModel = imodal("User");
                         if ($user = $userModel->where("national_id")->first()) {
-                            foreach (["name", "family", "mobile", "national_id"] as $index_name)
+                            foreach (["name", "family","gender", "mobile", "national_id"] as $index_name)
                                 if (!empty($data_record[$index_name]))$user->$index_name = $data_record[$index_name];
                             $user->save();
                         }else {
                             $user = $userModel->updateOrCreate(["national_id" => $item->national_id], [
                                 "name" => @$data_record["name"],
                                 "family" => @$data_record["family"],
+                                "gender" => @$data_record["gender"],
                                 "mobile" => @$data_record["mobile"],
                                 "national_id" => @$data_record["national_id"],
                             ]);

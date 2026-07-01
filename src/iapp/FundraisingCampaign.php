@@ -106,6 +106,7 @@ class FundraisingCampaign extends \iLaravel\Core\iApp\Model
                 $rules = array_merge($rules, [
                     'name' => "nullable|string",
                     'family' => "nullable|string",
+                    'gender' => "nullable|string|in:male,female",
                     'mobile' => "nullable|string",
                     'national_id' => "nullable|string",
                     'description' => "nullable|string",

@@ -28,6 +28,7 @@ return new class extends Migration
             $table->foreignId('donation_id')->nullable()->constrained('fundraising_donations');
             $table->string('name')->nullable();
             $table->string('family')->nullable();
+            $table->string('gender')->nullable();
             $table->string('mobile')->nullable();
             $table->string('national_id')->nullable();
             $table->text('description')->nullable();

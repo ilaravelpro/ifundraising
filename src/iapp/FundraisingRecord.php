@@ -54,6 +54,7 @@ class FundraisingRecord extends \iLaravel\Core\iApp\Model
                     'donation_id' => "required|exists:fundraising_donations,id",
                     'name' => "nullable|string",
                     'family' => "nullable|string",
+                    'gender' => "nullable|string|in:male,female",
                     'mobile' => "nullable|string",
                     'national_id' => "nullable|string",
                     'description' => "nullable|string",
